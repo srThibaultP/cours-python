@@ -1,0 +1,14 @@
+liste=[17,38,10,25,72]
+liste.sort()
+print(liste)
+liste+=[12]
+print(liste)
+liste.reverse()
+print(liste)
+print(liste.index(17))
+liste.remove(38)
+print(liste[1:2])
+print(liste[:2])
+print(liste[2:])
+print(liste[:])
+print(liste[-1])

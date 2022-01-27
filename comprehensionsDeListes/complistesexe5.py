@@ -1,0 +1,4 @@
+for i in range(0,15,3):
+    print(i, end=" ")
+print("\n")
+liste=[print(i, end=" ") for i in range(0,15,3)]
