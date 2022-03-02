@@ -6,44 +6,41 @@
 import platform
 import socket
 import cpuinfo
-import mysql.connector
 import psutil
 import time
 import shutil
 import os
 import csv
-
+import json
 
 def seconds_elapsed():
     return time.time() - psutil.boot_time()
 
 total, used, free = shutil.disk_usage("/")
 
-with open('services.csv', 'r') as fd:
+with open('/home/caiomi/cours-python/projet/services.csv', 'r') as fd:
     reader = csv.reader(fd)
     for row in reader:
         # do something
-        print("oui")
+        print(row)
+        status = os.system('systemctl is-active --quiet apache2')
+        print(status)  # will return 0 for active else inactive.
 
-
-mydb = mysql.connector.connect(
-    host="192.168.243.23",
-    user="caiomi",
-    database="supervisionpython"
-)
-
-mycursor = mydb.cursor()
-
-sql = "INSERT INTO info_pc (hostname, OS_NAME, uptime, kernel, CPUname, CPUfrequency, datetime, total, used, free) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-val = (str(socket.gethostname()), str(platform.system()), float(seconds_elapsed()), str(platform.release()), str(cpuinfo.get_cpu_info()[
-       "brand_raw"]), float(str(cpuinfo.get_cpu_info()["hz_actual_friendly"])[:4]), time.strftime('%Y-%m-%d %H:%M:%S'), (total // (2**30)), (used // (2**30)), (free // (2**30)))
-print(val)
-mycursor.execute(sql, val)
-
-mydb.commit()
-
-print(mycursor.rowcount, "record inserted.")
-
+senddata = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+senddata.connect(("localhost", 8080))
+databdd = {'hostname' : socket.gethostname(), 
+           'OS_NAME' : platform.system(),
+           'uptime' : seconds_elapsed(),
+           'kernel' : platform.release(),
+           'CPUname' : cpuinfo.get_cpu_info()['brand_raw'],
+           'CPUfrequency' : str(cpuinfo.get_cpu_info()['hz_actual_friendly'])[:4],
+           'datetime' : time.strftime("%Y-%m-%d %H:%M:%S"),
+           'total' : total // (2**30),
+           'used' : used // (2**30),
+           'free' : free // (2**30)
+           }
+databdd = json.dumps(databdd)
+senddata.sendall(bytes(databdd, 'utf8'))
 
 # platform.system()
 # socket.gethostname()
@@ -57,5 +54,4 @@ print(mycursor.rowcount, "record inserted.")
 # print("Used: %d GiB" % (used // (2**30)))
 # print("Free: %d GiB" % (free // (2**30)))
 
-status = os.system('systemctl is-active --quiet apache2')
-print(status)  # will return 0 for active else inactive.
+

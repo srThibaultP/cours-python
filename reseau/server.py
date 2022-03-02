@@ -22,7 +22,7 @@ def window():
 
 
 def serveur():
-    socket.bind(('', 15555))
+    socket.bind(('', 8080))
 
     while True:
         socket.listen(5)
