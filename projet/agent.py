@@ -13,12 +13,14 @@ import os
 import csv
 import json
 
+dirname = os.path.dirname(__file__)
+
 def seconds_elapsed():
     return time.time() - psutil.boot_time()
 
 total, used, free = shutil.disk_usage("/")
 
-with open('/home/caiomi/cours-python/projet/services.csv', 'r') as fd:
+with open(os.path.join(dirname, 'services.csv'), 'r') as fd:
     reader = csv.reader(fd)
     for row in reader:
         # do something
