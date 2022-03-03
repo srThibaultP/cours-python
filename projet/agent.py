@@ -25,7 +25,10 @@ with open(os.path.join(dirname, 'services.csv'), 'r') as fd:
     for row in reader:
         # do something
         status = os.system('systemctl is-active --quiet ' + row[0])
-        print(status)  # will return 0 for active else inactive.
+        if status == 0:
+            print(row[0] + " is active")
+        else:
+            print(row[0] + " is inactive")
 
 senddata = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 senddata.connect(("localhost", 8080))
@@ -34,11 +37,14 @@ databdd = {'hostname' : socket.gethostname(),
            'uptime' : seconds_elapsed(),
            'kernel' : platform.release(),
            'CPUname' : cpuinfo.get_cpu_info()['brand_raw'],
-           'CPUfrequency' : str(cpuinfo.get_cpu_info()['hz_actual_friendly'])[:4],
+           'CPUfrequency': (psutil.cpu_freq().current*1000),
            'datetime' : time.strftime("%Y-%m-%d %H:%M:%S"),
            'total' : total // (2**30),
            'used' : used // (2**30),
-           'free' : free // (2**30)
+           'free' : free // (2**30),
+           'CPUmax': psutil.cpu_freq().max,
+           'CPUmin': psutil.cpu_freq().min
+           
            }
 databdd = json.dumps(databdd)
 senddata.sendall(bytes(databdd, 'utf8'))

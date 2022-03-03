@@ -22,15 +22,15 @@ def serveur():
     print("Serveur lancé")
     while True:
         socket.listen(5)
-        client = socket.accept()
+        client, temp = socket.accept()
 
         response = client.recv(510)
         if response != "":
             dataagent = json.loads(response.decode("utf8"))
             print(dataagent)
-            sql = "INSERT INTO info_pc (hostname, OS_NAME, uptime, kernel, CPUname, CPUfrequency, datetime, total, used, free) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+            sql = "INSERT INTO info_pc (hostname, OS_NAME, uptime, kernel, CPUname, CPUfrequency, datetime, total, used, free, CPUmin, CPUmax) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
             val = (dataagent["hostname"], dataagent["OS_NAME"], dataagent["uptime"], dataagent["kernel"], dataagent["CPUname"],
-            dataagent["CPUfrequency"], dataagent["datetime"], dataagent["total"], dataagent["used"], dataagent["free"])
+            dataagent["CPUfrequency"], dataagent["datetime"], dataagent["total"], dataagent["used"], dataagent["free"], dataagent["CPUmin"], dataagent["CPUmax"])
             print(val)
             mycursor.execute(sql, val)
 
