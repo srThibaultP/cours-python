@@ -25,7 +25,7 @@ Flask==2.0.1
 fuse-python==1.0.0
 gpg===1.13.1-unknown
 GPUtil==1.4.0
-httplib2==0.14.0
+httplib2==0.19.0
 identify==2.4.9
 idna==2.8
 importlib-resources==5.4.0
