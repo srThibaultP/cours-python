@@ -31,7 +31,7 @@ with open(os.path.join(dirname, 'services.csv'), 'r') as fd:    #Cette partie pe
             print(row[0] + " est inactif")
 
 senddata = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    #On crée un socket
-senddata.connect(("localhost", 8080))   #On se connecte au serveur
+senddata.connect(("localhost", 8080))   #On se connecte au serveur - Changer ici l'adresse du serveur socket
 #On prépare les données à envoyer au format json
 databdd = {'hostname' : socket.gethostname(), 
            'OS_NAME' : platform.system(),
@@ -45,8 +45,9 @@ databdd = {'hostname' : socket.gethostname(),
            'free' : free // (2**30),
            'CPUmax': psutil.cpu_freq().max,
            'CPUmin': psutil.cpu_freq().min
+           
            }
 databdd = json.dumps(databdd)   #On convertit les données en json
-senddata.sendall(bytes(databdd, 'utf8'))    #On envoie les données au serveurS
+senddata.sendall(bytes(databdd, 'utf8'))    #On envoie les données au serveur
 
 
