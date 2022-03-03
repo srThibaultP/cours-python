@@ -22,8 +22,7 @@ with open('/home/caiomi/cours-python/projet/services.csv', 'r') as fd:
     reader = csv.reader(fd)
     for row in reader:
         # do something
-        print(row)
-        status = os.system('systemctl is-active --quiet apache2')
+        status = os.system('systemctl is-active --quiet ' + row[0])
         print(status)  # will return 0 for active else inactive.
 
 senddata = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

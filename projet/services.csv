@@ -1,3 +1,6 @@
-services
 apache2
 mysql
+docker
+ssh
+xrdp
+smbd

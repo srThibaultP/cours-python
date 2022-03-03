@@ -10,7 +10,7 @@ import json
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 mydb = mysql.connector.connect(
-    host="192.168.243.23",
+    host="192.168.43.197",
     user="caiomi",
     database="supervisionpython"
 )
@@ -19,10 +19,10 @@ mycursor = mydb.cursor()
 
 def serveur():
     socket.bind(('', 8080))
-
+    print("Serveur lancé")
     while True:
         socket.listen(5)
-        client, temp = socket.accept()
+        client = socket.accept()
 
         response = client.recv(510)
         if response != "":
